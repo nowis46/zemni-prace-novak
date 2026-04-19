@@ -16,12 +16,12 @@ export default function AdminBar({ onLogout }) {
           className={`text-xs font-bold uppercase tracking-widest px-5 py-2 rounded-xl transition-all disabled:opacity-50 ${
             saveStatus === 'ok'
               ? 'bg-green-500 text-white'
-              : saveStatus === 'error'
+              : saveStatus?.startsWith('error')
               ? 'bg-error text-white'
               : 'btn-primary-gradient text-white hover:opacity-90'
           }`}
         >
-          {saving ? 'Ukládám…' : saveStatus === 'ok' ? 'Uloženo ✓' : saveStatus === 'error' ? 'Chyba ✗' : 'Uložit změny'}
+          {saving ? 'Ukládám…' : saveStatus === 'ok' ? 'Uloženo ✓' : saveStatus?.startsWith('error') ? `Chyba ${saveStatus}` : 'Uložit změny'}
         </button>
         <button
           onClick={onLogout}

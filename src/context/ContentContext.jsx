@@ -3,14 +3,14 @@ import { defaults } from '../content/defaults.js'
 
 const ContentContext = createContext(null)
 
+const getPassword = () => sessionStorage.getItem('adminPassword') || ''
+
 export function ContentProvider({ children, isAdmin = false }) {
   const [fetched, setFetched] = useState({})
   const [loaded, setLoaded] = useState(false)
   const [saving, setSaving] = useState(false)
-  const [saveStatus, setSaveStatus] = useState(null) // 'ok' | 'error'
-  const [uploading, setUploading] = useState({}) // key → bool
-
-  const password = isAdmin ? sessionStorage.getItem('adminPassword') : null
+  const [saveStatus, setSaveStatus] = useState(null) // 'ok' | 'error:<msg>'
+  const [uploading, setUploading] = useState({})
 
   useEffect(() => {
     fetch('/api/content')
@@ -25,33 +25,43 @@ export function ContentProvider({ children, isAdmin = false }) {
 
   const uploadImage = async (key, file) => {
     setUploading((u) => ({ ...u, [key]: true }))
-    const base64 = await fileToBase64(file)
-    const res = await fetch('/api/upload', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'x-admin-password': password },
-      body: JSON.stringify({ key, base64, filename: file.name, contentType: file.type }),
-    })
-    const data = await res.json()
-    if (data.url) update(key, data.url)
-    setUploading((u) => ({ ...u, [key]: false }))
-    return data.url
+    try {
+      const base64 = await fileToBase64(file)
+      const res = await fetch('/api/upload', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-admin-password': getPassword() },
+        body: JSON.stringify({ key, base64, filename: file.name, contentType: file.type }),
+      })
+      const data = await res.json()
+      if (data.url) update(key, data.url)
+      return data.url
+    } catch (err) {
+      console.error('Upload failed:', err)
+    } finally {
+      setUploading((u) => ({ ...u, [key]: false }))
+    }
   }
 
   const saveAll = async () => {
     setSaving(true)
     setSaveStatus(null)
+    const pwd = getPassword()
+    console.log('Saving with password length:', pwd.length, 'content keys:', Object.keys(fetched).length)
     try {
       const res = await fetch('/api/content', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'x-admin-password': password },
+        headers: { 'Content-Type': 'application/json', 'x-admin-password': pwd },
         body: JSON.stringify(fetched),
       })
-      setSaveStatus(res.ok ? 'ok' : 'error')
-    } catch {
-      setSaveStatus('error')
+      const body = await res.json().catch(() => ({}))
+      console.log('Save response:', res.status, body)
+      setSaveStatus(res.ok ? 'ok' : `error:${res.status}`)
+    } catch (err) {
+      console.error('Save network error:', err)
+      setSaveStatus('error:network')
     } finally {
       setSaving(false)
-      setTimeout(() => setSaveStatus(null), 3000)
+      setTimeout(() => setSaveStatus(null), 4000)
     }
   }
 
