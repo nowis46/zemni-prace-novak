@@ -1,7 +1,9 @@
 import { useEffect, useRef } from 'react'
 import { EditableImage } from './admin/Editable.jsx'
+import { useContent } from '../context/ContentContext.jsx'
 
 export default function Hero() {
+  const { isAdmin } = useContent()
   const bgRef = useRef(null)
 
   useEffect(() => {
@@ -24,7 +26,7 @@ export default function Hero() {
           className="w-full h-full object-cover"
         />
       </div>
-      <div className="hero-gradient absolute inset-0" />
+      <div className={`hero-gradient absolute inset-0 ${isAdmin ? 'pointer-events-none' : ''}`} />
 
       <div className="relative z-10 h-full flex flex-col justify-end pb-24 px-8 md:px-12 max-w-[1920px] mx-auto">
         <div className="max-w-3xl">
