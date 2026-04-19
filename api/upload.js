@@ -24,6 +24,7 @@ export default async function handler(req, res) {
       access: 'public',
       contentType: contentType || 'image/jpeg',
       addRandomSuffix: false,
+      allowOverwrite: true,
     })
 
     return res.status(200).json({ url: blob.url })
