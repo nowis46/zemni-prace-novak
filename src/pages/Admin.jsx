@@ -40,8 +40,10 @@ function LoginPage({ onLogin }) {
     setLoading(true)
     setError(null)
     try {
-      const res = await fetch('/api/content', {
-        headers: { 'x-admin-password': password },
+      const res = await fetch('/api/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password }),
       })
       if (res.ok) {
         sessionStorage.setItem('adminPassword', password)
