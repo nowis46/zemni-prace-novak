@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+import { EditableImage } from './admin/Editable.jsx'
 
 export default function Hero() {
   const bgRef = useRef(null)
@@ -15,17 +16,14 @@ export default function Hero() {
 
   return (
     <section id="hero" className="relative h-screen overflow-hidden">
-      <div
-        ref={bgRef}
-        className="absolute inset-0 will-change-transform"
-        style={{
-          backgroundImage: `url(/assets/hero.png)`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          height: '120%',
-          top: '-10%',
-        }}
-      />
+      <div ref={bgRef} className="absolute inset-0 will-change-transform" style={{ height: '120%', top: '-10%' }}>
+        <EditableImage
+          contentKey="hero_image"
+          defaultSrc="/assets/hero.png"
+          alt="Zemní práce Novák — hero"
+          className="w-full h-full object-cover"
+        />
+      </div>
       <div className="hero-gradient absolute inset-0" />
 
       <div className="relative z-10 h-full flex flex-col justify-end pb-24 px-8 md:px-12 max-w-[1920px] mx-auto">

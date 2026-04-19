@@ -1,3 +1,4 @@
+import { ContentProvider } from '../context/ContentContext.jsx'
 import Nav from '../components/Nav.jsx'
 import Hero from '../components/Hero.jsx'
 import Services from '../components/Services.jsx'
@@ -9,9 +10,8 @@ import Footer from '../components/Footer.jsx'
 import CookieBanner from '../components/CookieBanner.jsx'
 import useReveal from '../hooks/useReveal.js'
 
-export default function Home() {
+function PageContent() {
   useReveal()
-
   return (
     <>
       <Nav />
@@ -24,5 +24,13 @@ export default function Home() {
       <Footer />
       <CookieBanner />
     </>
+  )
+}
+
+export default function Home() {
+  return (
+    <ContentProvider isAdmin={false}>
+      <PageContent />
+    </ContentProvider>
   )
 }
