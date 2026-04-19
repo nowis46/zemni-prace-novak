@@ -1,0 +1,77 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: #f9f9fb;
+  margin: 0;
+}
+
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+}
+
+/* Glassmorphism navigation */
+.glass-nav {
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+}
+
+/* Hero overlay gradient */
+.hero-gradient {
+  background: linear-gradient(
+    to bottom,
+    rgba(26, 28, 29, 0.4) 0%,
+    rgba(26, 28, 29, 0) 40%,
+    rgba(26, 28, 29, 0) 60%,
+    rgba(249, 249, 251, 1) 100%
+  );
+}
+
+/* Primary CTA gradient — Industrial Gold shimmer */
+.btn-primary-gradient {
+  background: linear-gradient(135deg, #7c5800 0%, #ffb800 100%);
+}
+
+/* Scroll animation base state */
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 700ms cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              transform 700ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  will-change: transform;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-left {
+  opacity: 0;
+  transform: translateX(-60px);
+  transition: opacity 700ms cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              transform 700ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  will-change: transform;
+}
+.reveal-left.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.reveal-right {
+  opacity: 0;
+  transform: translateX(60px);
+  transition: opacity 700ms cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              transform 700ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  will-change: transform;
+}
+.reveal-right.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.stagger-1 { transition-delay: 100ms; }
+.stagger-2 { transition-delay: 200ms; }
+.stagger-3 { transition-delay: 300ms; }
+.stagger-4 { transition-delay: 400ms; }
