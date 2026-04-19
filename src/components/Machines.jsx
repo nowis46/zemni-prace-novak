@@ -24,11 +24,11 @@ export default function Machines() {
               key={m.id}
               className={`flex flex-col ${m.reverse ? 'md:flex-row-reverse' : 'md:flex-row'} items-center gap-16 ${m.revealClass}`}
             >
-              <div className="w-full md:w-3/5 overflow-hidden rounded-3xl">
+              <div className="w-full md:w-3/5 overflow-hidden rounded-3xl bg-surface-container-low">
                 <EditableImage
                   contentKey={`machine_${m.id}_image`}
                   alt={`Machine ${m.id}`}
-                  className="w-full h-full object-cover aspect-[16/10] hover:scale-[1.08] transition-transform duration-700"
+                  className="w-full aspect-[16/10] object-contain"
                   loading="lazy"
                 />
               </div>
