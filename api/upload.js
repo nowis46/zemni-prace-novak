@@ -1,12 +1,13 @@
 import { put } from '@vercel/blob'
 
+const token = process.env.BLOB_READ_WRITE_TOKEN
+
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*')
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS')
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, x-admin-password')
 
   if (req.method === 'OPTIONS') return res.status(200).end()
-
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' })
 
   if (req.headers['x-admin-password'] !== process.env.ADMIN_PASSWORD) {
@@ -25,14 +26,17 @@ export default async function handler(req, res) {
     const blobKey = `site/images/${key.replace(/[^a-zA-Z0-9_-]/g, '_')}.${ext}`
 
     const blob = await put(blobKey, buffer, {
-      access: 'public',
+      access: 'private',
       contentType: contentType || 'image/jpeg',
       addRandomSuffix: false,
+      token,
     })
 
-    return res.status(200).json({ url: blob.url })
+    // Return a proxy URL so images work without public access
+    const proxyUrl = `/api/img?u=${encodeURIComponent(blob.url)}`
+    return res.status(200).json({ url: proxyUrl })
   } catch (err) {
     console.error('Upload error:', err)
-    return res.status(500).json({ error: 'Upload failed' })
+    return res.status(500).json({ error: err.message })
   }
 }
