@@ -32,7 +32,7 @@ export function EditableText({ contentKey, tag: Tag = 'span', className }) {
   )
 }
 
-export function EditableImage({ contentKey, defaultSrc, alt, className, style, loading }) {
+export function EditableImage({ contentKey, defaultSrc, alt, className, style, loading, persistent = false }) {
   const { get, isAdmin, uploadImage, uploading } = useContent()
   const src = get(contentKey) || defaultSrc
   const inputRef = useRef(null)
@@ -44,6 +44,11 @@ export function EditableImage({ contentKey, defaultSrc, alt, className, style, l
   }
 
   if (!isAdmin) return <img src={src} alt={alt} className={className} style={style} loading={loading} />
+
+  // persistent = always show the button (used when hover is blocked by overlapping elements)
+  const buttonClass = persistent
+    ? 'absolute top-4 left-4 z-50 bg-black/70 text-white flex items-center gap-2 px-4 py-2 rounded-xl font-bold text-sm hover:bg-primary transition-colors'
+    : 'absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex flex-col items-center justify-center text-white font-bold transition-opacity gap-2'
 
   return (
     <div className="relative group">
@@ -57,14 +62,16 @@ export function EditableImage({ contentKey, defaultSrc, alt, className, style, l
       <button
         type="button"
         onClick={() => inputRef.current?.click()}
-        className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex flex-col items-center justify-center text-white font-bold transition-opacity gap-2"
+        className={buttonClass}
       >
         {isUploading ? (
           <span className="text-sm">Nahrávám…</span>
         ) : (
           <>
             <span className="material-symbols-outlined text-4xl">photo_camera</span>
-            <span className="text-sm tracking-widest uppercase">Změnit foto</span>
+            <span className={persistent ? '' : 'text-sm tracking-widest uppercase'}>
+              {persistent ? 'Změnit hlavní foto' : 'Změnit foto'}
+            </span>
           </>
         )}
       </button>

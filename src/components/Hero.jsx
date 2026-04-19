@@ -24,6 +24,7 @@ export default function Hero() {
           defaultSrc="/assets/hero.png"
           alt="Zemní práce Novák — hero"
           className="w-full h-full object-cover"
+          persistent
         />
       </div>
       <div className={`hero-gradient absolute inset-0 ${isAdmin ? 'pointer-events-none' : ''}`} />
