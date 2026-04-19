@@ -13,9 +13,7 @@ export default async function handler(req, res) {
     try {
       const { blobs } = await list({ prefix: BLOB_KEY, limit: 1 })
       if (!blobs.length) return res.status(200).json({})
-      const response = await fetch(blobs[0].url, {
-        headers: { Authorization: `Bearer ${process.env.BLOB_READ_WRITE_TOKEN}` },
-      })
+      const response = await fetch(blobs[0].url)
       if (!response.ok) return res.status(200).json({})
       const content = await response.json()
       return res.status(200).json(content)
@@ -31,7 +29,7 @@ export default async function handler(req, res) {
     }
     try {
       await put(BLOB_KEY, JSON.stringify(req.body), {
-        access: 'private',
+        access: 'public',
         contentType: 'application/json',
         addRandomSuffix: false,
       })

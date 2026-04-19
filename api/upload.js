@@ -13,10 +13,7 @@ export default async function handler(req, res) {
   }
 
   const { key, base64, filename, contentType } = req.body
-
-  if (!key || !base64 || !filename) {
-    return res.status(400).json({ error: 'Missing fields' })
-  }
+  if (!key || !base64 || !filename) return res.status(400).json({ error: 'Missing fields' })
 
   try {
     const buffer = Buffer.from(base64, 'base64')
@@ -24,13 +21,12 @@ export default async function handler(req, res) {
     const blobKey = `site/images/${key.replace(/[^a-zA-Z0-9_-]/g, '_')}.${ext}`
 
     const blob = await put(blobKey, buffer, {
-      access: 'private',
+      access: 'public',
       contentType: contentType || 'image/jpeg',
       addRandomSuffix: false,
     })
 
-    const proxyUrl = `/api/img?u=${encodeURIComponent(blob.url)}`
-    return res.status(200).json({ url: proxyUrl })
+    return res.status(200).json({ url: blob.url })
   } catch (err) {
     console.error('Upload error:', err)
     return res.status(500).json({ error: err.message })
