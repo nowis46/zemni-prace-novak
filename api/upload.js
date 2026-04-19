@@ -1,7 +1,5 @@
 import { put } from '@vercel/blob'
 
-const token = process.env.BLOB_READ_WRITE_TOKEN
-
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*')
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS')
@@ -29,10 +27,8 @@ export default async function handler(req, res) {
       access: 'private',
       contentType: contentType || 'image/jpeg',
       addRandomSuffix: false,
-      token,
     })
 
-    // Return a proxy URL so images work without public access
     const proxyUrl = `/api/img?u=${encodeURIComponent(blob.url)}`
     return res.status(200).json({ url: proxyUrl })
   } catch (err) {
