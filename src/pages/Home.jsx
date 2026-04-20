@@ -9,9 +9,11 @@ import Contact from '../components/Contact.jsx'
 import Footer from '../components/Footer.jsx'
 import CookieBanner from '../components/CookieBanner.jsx'
 import useReveal from '../hooks/useReveal.js'
+import { useContent } from '../context/ContentContext.jsx'
 
 function PageContent() {
-  useReveal()
+  const { loaded } = useContent()
+  useReveal([loaded])
   return (
     <>
       <Nav />

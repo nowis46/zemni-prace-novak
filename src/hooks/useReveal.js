@@ -1,9 +1,7 @@
 import { useEffect } from 'react'
 
-export default function useReveal() {
+export default function useReveal(deps = []) {
   useEffect(() => {
-    const elements = document.querySelectorAll('.reveal, .reveal-left, .reveal-right')
-
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -16,8 +14,12 @@ export default function useReveal() {
       { threshold: 0.15 }
     )
 
-    elements.forEach((el) => observer.observe(el))
+    // Observe all elements not yet visible
+    document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach((el) => {
+      if (!el.classList.contains('visible')) observer.observe(el)
+    })
 
     return () => observer.disconnect()
-  }, [])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, deps)
 }
