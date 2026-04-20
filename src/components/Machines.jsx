@@ -42,7 +42,7 @@ function MachineCard({ machine, index, isAdmin, onFieldChange, onImageChange, on
   }
 
   return (
-    <div className={`flex flex-col ${reverse ? 'md:flex-row-reverse' : 'md:flex-row'} items-center gap-16 ${revealClass} relative`}>
+    <div className={`flex flex-col ${reverse ? 'md:flex-row-reverse' : 'md:flex-row'} items-center gap-10 ${revealClass} relative`}>
 
       {isAdmin && (
         <button
@@ -85,7 +85,7 @@ function MachineCard({ machine, index, isAdmin, onFieldChange, onImageChange, on
         )}
       </div>
 
-      <div className="w-full md:w-2/5 flex flex-col gap-6">
+      <div className="w-full md:w-2/5 flex flex-col gap-3">
         <div className="flex flex-wrap gap-2">
           {[['chip1', 'bg-secondary-fixed text-on-secondary-fixed'], ['chip2', 'bg-primary-fixed text-on-primary-fixed']].map(([field, style]) => (
             <MachineField
@@ -104,7 +104,7 @@ function MachineCard({ machine, index, isAdmin, onFieldChange, onImageChange, on
           onChange={(v) => onFieldChange('name', v)}
           isAdmin={isAdmin}
           tag="h3"
-          className="text-4xl font-bold tracking-tight text-on-surface block"
+          className="text-3xl font-bold tracking-tight text-on-surface block"
           placeholder="Název stroje"
         />
 
@@ -113,13 +113,13 @@ function MachineCard({ machine, index, isAdmin, onFieldChange, onImageChange, on
           onChange={(v) => onFieldChange('desc', v)}
           isAdmin={isAdmin}
           tag="p"
-          className="text-on-surface-variant text-lg leading-relaxed"
+          className="text-on-surface-variant text-base leading-relaxed"
           placeholder="Popis stroje..."
         />
 
         <div className="flex gap-4">
           {[1, 2].map((s) => (
-            <div key={s} className="bg-surface-container-lowest p-6 rounded-2xl flex-1">
+            <div key={s} className="bg-surface-container-lowest p-4 rounded-2xl flex-1">
               <MachineField
                 value={machine[`spec${s}_label`]}
                 onChange={(v) => onFieldChange(`spec${s}_label`, v)}
@@ -133,7 +133,7 @@ function MachineCard({ machine, index, isAdmin, onFieldChange, onImageChange, on
                 onChange={(v) => onFieldChange(`spec${s}_value`, v)}
                 isAdmin={isAdmin}
                 tag="div"
-                className="text-2xl font-black text-on-surface block"
+                className="text-xl font-black text-on-surface block"
                 placeholder="—"
               />
             </div>
@@ -175,16 +175,16 @@ export default function Machines() {
   }
 
   return (
-    <section id="technika" className="bg-surface-container-low py-32 md:py-48">
+    <section id="technika" className="bg-surface-container-low py-16 md:py-24">
       <div className="max-w-[1920px] mx-auto px-8 md:px-12">
-        <div className="text-center mb-24 reveal">
-          <h2 className="text-5xl md:text-7xl font-extrabold tracking-tighter text-on-surface mb-4">
+        <div className="text-center mb-10 reveal">
+          <h2 className="text-4xl md:text-6xl font-extrabold tracking-tighter text-on-surface mb-4">
             Vybavení pro každý terén.
           </h2>
           <p className="text-on-surface-variant text-xl">Špičková technika udržovaná s nejvyšší péčí.</p>
         </div>
 
-        <div className="flex flex-col gap-32">
+        <div className="flex flex-col gap-16">
           {machines.map((m, i) => (
             <MachineCard
               key={m.id}
