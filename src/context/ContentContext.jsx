@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect, useRef } from 'react'
-import { defaults } from '../content/defaults.js'
+import { defaults, defaultMachines } from '../content/defaults.js'
 
 const ContentContext = createContext(null)
 
@@ -25,6 +25,26 @@ export function ContentProvider({ children, isAdmin = false }) {
   }, [])
 
   const get = (key) => fetched[key] ?? defaults[key] ?? ''
+
+  const getMachines = () => {
+    const stored = fetched.machines
+    return Array.isArray(stored) ? stored : defaultMachines
+  }
+
+  const updateMachines = (machines) => update('machines', machines)
+
+  // Upload a file and return the blob URL without updating flat content
+  const uploadRaw = async (blobKey, file) => {
+    const compressed = await compressImage(file)
+    const base64 = await fileToBase64(compressed)
+    const res = await fetch('/api/upload', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-admin-password': getPassword() },
+      body: JSON.stringify({ key: blobKey, base64, filename: `${blobKey}.jpg`, contentType: 'image/jpeg' }),
+    })
+    const data = await res.json()
+    return data.url || null
+  }
 
   const update = (key, value) => {
     setFetched((prev) => {
@@ -95,7 +115,7 @@ export function ContentProvider({ children, isAdmin = false }) {
   }
 
   return (
-    <ContentContext.Provider value={{ get, isAdmin, update, uploadImage, uploading, saveAll, saving, saveStatus, loaded }}>
+    <ContentContext.Provider value={{ get, isAdmin, update, getMachines, updateMachines, uploadImage, uploadRaw, uploading, saveAll, saving, saveStatus, loaded }}>
       {children}
     </ContentContext.Provider>
   )
