@@ -10,6 +10,7 @@ export default async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end()
 
   if (req.method === 'GET') {
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate')
     try {
       const { blobs } = await list({ prefix: BLOB_KEY, limit: 1 })
       if (!blobs.length) return res.status(200).json({})
