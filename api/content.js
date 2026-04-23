@@ -33,7 +33,7 @@ export default async function handler(req, res) {
         access: 'public',
         contentType: 'application/json',
         addRandomSuffix: false,
-        allowOverwrite: true,
+        allowOverwrite: true, // content.json is always the same path, CDN bust via no-cache header
       })
       return res.status(200).json({ ok: true })
     } catch (err) {

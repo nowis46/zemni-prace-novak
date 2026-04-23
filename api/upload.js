@@ -23,8 +23,7 @@ export default async function handler(req, res) {
     const blob = await put(blobKey, buffer, {
       access: 'public',
       contentType: contentType || 'image/jpeg',
-      addRandomSuffix: false,
-      allowOverwrite: true,
+      addRandomSuffix: true,
     })
 
     return res.status(200).json({ url: blob.url })
