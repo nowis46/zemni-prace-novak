@@ -23,7 +23,8 @@ function MachineField({ value, onChange, tag: Tag = 'span', className, isAdmin, 
   )
 }
 
-function MachineCard({ machine, index, isAdmin, onFieldChange, onImageChange, onDelete, uploadRaw }) {
+function MachineCard({ machine, index, isAdmin, onFieldChange, onImageChange, onDelete, uploadRaw, allMachines }) {
+  const { saveMachines } = useContent()
   const reverse = index % 2 !== 0
   const revealClass = isAdmin ? '' : (reverse ? 'reveal-right' : 'reveal-left')
   const [uploading, setUploading] = useState(false)
@@ -35,7 +36,14 @@ function MachineCard({ machine, index, isAdmin, onFieldChange, onImageChange, on
     setUploading(true)
     try {
       const url = await uploadRaw(`machine_${machine.id}`, file)
-      if (url) onImageChange(url)
+      if (url) {
+        onImageChange(url)
+        // Build updated list explicitly and save — avoids React state timing issues
+        const updated = allMachines.map((m) =>
+          m.id === machine.id ? { ...m, image: url } : m
+        )
+        await saveMachines(updated)
+      }
     } finally {
       setUploading(false)
     }
@@ -195,6 +203,7 @@ export default function Machines() {
               onImageChange={(url) => updateField(m.id, 'image', url)}
               onDelete={() => removeMachine(m.id)}
               uploadRaw={uploadRaw}
+              allMachines={machines}
             />
           ))}
         </div>

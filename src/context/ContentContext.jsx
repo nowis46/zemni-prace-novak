@@ -33,6 +33,24 @@ export function ContentProvider({ children, isAdmin = false }) {
 
   const updateMachines = (machines) => update('machines', machines)
 
+  // Save machines with a specific list — bypasses React state timing issues
+  const saveMachines = async (machinesList) => {
+    const contentToSave = { ...fetchedRef.current, machines: machinesList }
+    fetchedRef.current = contentToSave
+    setFetched(contentToSave)
+    setSaving(true)
+    setSaveStatus(null)
+    try {
+      const res = await doSave(contentToSave)
+      setSaveStatus(res.ok ? 'ok' : `error:${res.status}`)
+    } catch {
+      setSaveStatus('error:network')
+    } finally {
+      setSaving(false)
+      setTimeout(() => setSaveStatus(null), 3000)
+    }
+  }
+
   // Upload a file and return the blob URL without updating flat content
   const uploadRaw = async (blobKey, file) => {
     const compressed = await compressImage(file)
@@ -115,7 +133,7 @@ export function ContentProvider({ children, isAdmin = false }) {
   }
 
   return (
-    <ContentContext.Provider value={{ get, isAdmin, update, getMachines, updateMachines, uploadImage, uploadRaw, uploading, saveAll, saving, saveStatus, loaded }}>
+    <ContentContext.Provider value={{ get, isAdmin, update, getMachines, updateMachines, saveMachines, uploadImage, uploadRaw, uploading, saveAll, saving, saveStatus, loaded }}>
       {children}
     </ContentContext.Provider>
   )
