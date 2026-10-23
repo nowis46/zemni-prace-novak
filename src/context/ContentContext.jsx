@@ -5,13 +5,16 @@ const ContentContext = createContext(null)
 
 const getPassword = () => sessionStorage.getItem('adminPassword') || ''
 
-export function ContentProvider({ children, isAdmin = false }) {
-  const [fetched, setFetched] = useState({})
+const initialFromPage = () =>
+  (typeof window !== 'undefined' && window.__CONTENT__) || {}
+
+export function ContentProvider({ children, isAdmin = false, initialContent }) {
+  const [fetched, setFetched] = useState(() => initialContent ?? (isAdmin ? {} : initialFromPage()))
   const [loaded, setLoaded] = useState(false)
   const [saving, setSaving] = useState(false)
   const [saveStatus, setSaveStatus] = useState(null)
   const [uploading, setUploading] = useState({})
-  const fetchedRef = useRef({})
+  const fetchedRef = useRef(fetched)
 
   useEffect(() => {
     fetch('/api/content')

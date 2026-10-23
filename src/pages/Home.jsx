@@ -29,9 +29,9 @@ function PageContent() {
   )
 }
 
-export default function Home() {
+export default function Home({ initialContent }) {
   return (
-    <ContentProvider isAdmin={false}>
+    <ContentProvider isAdmin={false} initialContent={initialContent}>
       <PageContent />
     </ContentProvider>
   )
